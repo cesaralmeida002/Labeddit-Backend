@@ -4,7 +4,7 @@ export abstract class BaseDatabase {
     protected static connection = knex({
         client: "sqlite3",
         connection: {
-            filename: "./src/database/labeddit.db",
+            filename: process.env.DB_FILE_PATH as string,
         },
         useNullAsDefault: true,
         pool: { 
