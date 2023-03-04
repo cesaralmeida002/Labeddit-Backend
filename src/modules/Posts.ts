@@ -40,6 +40,18 @@ export class Posts {
     public setDislikes(value: number): void {
         this.dislikes = value;
     }
+    public upLikes(): void {
+        this.likes += 1;
+      }
+      public downLikes(): void {
+        this.likes -= 1;
+      }
+      public removeDislikes(): void {
+        this.likes += 1;
+      }
+      public downDislikes(): void {
+        this.likes -= 1;
+      }
     public getCreatedAt(): string {
         return this.createdAt;
     }
