@@ -1,6 +1,6 @@
 import { CommentsDB, CommentsModels } from "../types";
 
-export class Comments{
+export class Comments {
     constructor(
         private id: string,
         private userId: string,
@@ -9,7 +9,7 @@ export class Comments{
         private likes: number,
         private dislikes: number,
         private createdAt: string,
-    ){}
+    ) { }
 
     public getId(): string {
         return this.id;
@@ -47,6 +47,18 @@ export class Comments{
     public setDislikes(value: number): void {
         this.dislikes = value;
     }
+    public upLikes(): void {
+        this.likes += 1;
+    }
+    public downLikes(): void {
+        this.likes -= 1;
+    }
+    public removeDislikes(): void {
+        this.likes += 1;
+    }
+    public downDislikes(): void {
+        this.likes -= 1;
+    }    
     public getCreatedAt(): string {
         return this.createdAt;
     }
@@ -54,8 +66,8 @@ export class Comments{
         this.createdAt = value;
     }
 
-    public toModelsCommentsDB(): CommentsDB{
-        return{
+    public toModelsCommentsDB(): CommentsDB {
+        return {
             id: this.id,
             user_id: this.userId,
             post_id: this.postId,
@@ -65,9 +77,9 @@ export class Comments{
             created_at: this.createdAt,
         }
     }
-    
-    public toBusinessCommentsModels(): CommentsModels{
-        return{
+
+    public toBusinessCommentsModels(): CommentsModels {
+        return {
             id: this.id,
             userId: this.userId,
             postId: this.postId,
