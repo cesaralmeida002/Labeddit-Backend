@@ -11,6 +11,7 @@ CREATE TABLE posts (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     user_id TEXT NOT NULL,
     content TEXT NOT NULL,
+    comment TEXT,
     likes INTEGER DEFAULT (0) NOT NULL,
     dislikes INTEGER DEFAULT (0) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)

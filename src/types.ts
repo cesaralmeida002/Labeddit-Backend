@@ -20,16 +20,18 @@ export interface UsersDB{
   
   export interface PostsDB {
     id: string,
-    user_id: string
-    content: string
+    user_id: string,
+    content: string,
+    comment: string,
     likes: number, 
     dislikes: number,
     created_at: string 
 }
 export interface PostsModels {
     id: string,
-    userId: string
-    content: string
+    userId: string,
+    content: string,
+    comment: string,
     likes: number, 
     dislikes: number,
     createdAt: string 
@@ -64,4 +66,30 @@ export interface PostsLikesDislikesModels {
     userId: string
     postId: string
     like: number, 
+}
+
+export interface PostsCreatorDB{
+    id: string,
+    content: string,
+    comment: string,
+    likes: number, 
+    dislikes: number,
+    createdAt: string,
+    user: {
+        id: string,
+        name: string
+    }
+}
+
+export interface CommentsCreatorDB {
+    id: string,
+    post_id: string,
+    comment: string,
+    likes: number,
+    dislikes: number,
+    created_at: string,
+    user: {
+        user_id: string,
+        name: string
+    }
 }
