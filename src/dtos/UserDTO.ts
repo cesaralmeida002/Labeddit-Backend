@@ -10,12 +10,12 @@ export interface SignupOutput {
 
 export interface LoginInput {
     email: unknown,
-    senha: unknown 
+    password: unknown 
 }
 
 export interface LoginOutput {
-    email: unknown,
-    senha: unknown 
+    token: string
+    
 }
 
 export interface LogoutOutput {

@@ -1,26 +1,24 @@
 import { PostsDB, PostsModels } from "../types";
 
 export class Posts {
-    constructor(
+    constructor (
         private id: string,
-        private userId: string,
         private content: string,
-        private likes: number,
+        private comment: string,
+        private likes: number, 
         private dislikes: number,
         private createdAt: string,
-    ) { }
+        private user: {
+            id: string,
+            name: string
+        } 
+        ) {}
 
     public getId(): string {
         return this.id;
     }
     public setId(value: string): void {
         this.id = value;
-    }
-    public getUserId(): string {
-        return this.userId;
-    }
-    public setUserId(value: string): void {
-        this.userId = value;
     }
     public getContent(): string {
         return this.content;
@@ -62,8 +60,9 @@ export class Posts {
     public toPostModelsDB(): PostsDB {
         return {
             id: this.id,
-            user_id: this.userId,
+            user_id: this.user.id,
             content: this.content,
+            comment: this.comment,
             likes: this.likes,
             dislikes: this.dislikes,
             created_at: this.createdAt,
@@ -73,8 +72,9 @@ export class Posts {
     public toBusinessPostModels(): PostsModels {
         return {
             id: this.id,
-            userId: this.userId,
+            userId: this.user.id,
             content: this.content,
+            comment: this.comment,
             likes: this.likes,
             dislikes: this.dislikes,
             createdAt: this.createdAt,
