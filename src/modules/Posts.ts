@@ -1,19 +1,19 @@
-import { PostsDB, PostsModels } from "../types";
+import { CommentsCreatorDB, CommentsDB, CommentsModels, PostsDB, PostsModels } from "../types";
 
 export class Posts {
-    constructor (
+    constructor(
         private id: string,
         private content: string,
         private comment: string,
-        private likes: number, 
+        private likes: number,
         private dislikes: number,
         private createdAt: string,
         private user: {
             id: string,
             name: string
-        } 
-        ) {}
-
+        },
+        private post_comment: CommentsCreatorDB
+    ) { }
     public getId(): string {
         return this.id;
     }
@@ -40,16 +40,16 @@ export class Posts {
     }
     public upLikes(): void {
         this.likes += 1;
-      }
-      public downLikes(): void {
+    }
+    public downLikes(): void {
         this.likes -= 1;
-      }
-      public removeDislikes(): void {
+    }
+    public removeDislikes(): void {
         this.likes += 1;
-      }
-      public downDislikes(): void {
+    }
+    public downDislikes(): void {
         this.likes -= 1;
-      }
+    }
     public getCreatedAt(): string {
         return this.createdAt;
     }
@@ -74,6 +74,28 @@ export class Posts {
             id: this.id,
             userId: this.user.id,
             content: this.content,
+            comment: this.comment,
+            likes: this.likes,
+            dislikes: this.dislikes,
+            createdAt: this.createdAt,
+        }
+    }
+    public toModelsCommentDB(): CommentsDB {
+        return {
+            id: this.id,
+            user_id: this.user.id,
+            post_id: this.post_comment.post_id,
+            comment: this.comment,
+            likes: this.likes,
+            dislikes: this.dislikes,
+            created_at: this.createdAt
+        }
+    }
+    public toBusinessCommentModels(): CommentsModels {
+        return {
+            id: this.id,
+            userId: this.user.id,
+            postId: this.post_comment.post_id,
             comment: this.comment,
             likes: this.likes,
             dislikes: this.dislikes,

@@ -17,3 +17,4 @@ const postsController = new PostsController(
 
 postsRouter.get("/", postsController.getPosts)
 postsRouter.post("/", postsController.createPost)
+postsRouter.post("/:id", postsController.createComment)

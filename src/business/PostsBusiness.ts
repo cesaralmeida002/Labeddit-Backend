@@ -1,4 +1,5 @@
 
+import { runInThisContext } from "vm";
 import { PostsDatabase } from "../database/PostsDatabase";
 import { createCommentInput, CreatePostInput, GetPostInput, GetPostOutput } from "../dtos/PostsDTO";
 import { BadRequestError } from "../errors/BadRequestError";
@@ -50,7 +51,8 @@ export class PostsBusiness {
                 postDB.likes,
                 postDB.dislikes,
                 postDB.created_at,
-                creator(postDB.user_id)
+                creator(postDB.user_id),
+                postDB.post_comment
             )
 
             return post.toBusinessPostModels()
@@ -60,18 +62,18 @@ export class PostsBusiness {
     }
 
     public createPost = async (input: CreatePostInput): Promise<void> => {
-        const {token, content} = input
-        if (token === undefined){
-            throw new BadRequestError ("'TOKEN' deve ser string")
+        const { token, content } = input
+        if (token === undefined) {
+            throw new BadRequestError("'TOKEN' deve ser string")
         }
-        if(content === null){
+        if (content === null) {
             throw new BadRequestError("'CONTENT' inválido")
         }
-        if( typeof content !== "string"){
+        if (typeof content !== "string") {
             throw new BadRequestError("'CONTENT' deve ser uma string")
         }
         const payload = this.tokenManager.getPayload(token)
-        if(payload === null){
+        if (payload === null) {
             throw new BadRequestError("'TOKEN' inválido")
         }
 
@@ -86,34 +88,110 @@ export class PostsBusiness {
             0,
             0,
             created_at,
-            {id: user_id,
-            name: payload.apelido}
+            {
+                id: user_id,
+                name: payload.apelido
+            },
+            {
+                id: '',
+                post_id: '',
+                comment: '',
+                likes: 0,
+                dislikes: 0,
+                created_at: '',
+                user: {
+                    user_id: '',
+                    name: '',
+                }
+            }
         )
         const postsDB = newPost.toPostModelsDB()
 
         await this.postsDatabase.insertPost(postsDB)
     }
-    public createComment = async (input: createCommentInput): Promise <void> => {
-        const {id_post, comment,token } = input
-        if (id_post !== "string"){
-            throw new BadRequestError ("'ID_POST' deve ser string")
+    public createComment = async (input: createCommentInput): Promise<void> => {
+        const { id_post, comment, token } = input
+        if (id_post !== "string") {
+            throw new BadRequestError("'ID_POST' deve ser string")
         }
-        if(comment === null){
+        if (comment === null) {
             throw new BadRequestError("'COMMENT' inválido")
         }
-        if( typeof comment !== "string"){
+        if (typeof comment !== "string") {
             throw new BadRequestError("'COMMENT' deve ser uma string")
         }
-        if( typeof id_post !== "string"){
+        if (typeof id_post !== "string") {
             throw new BadRequestError("'ID_POST' deve ser uma string")
         }
         const payload = this.tokenManager.getPayload(token)
-        if(payload === null){
+        if (payload === null) {
             throw new BadRequestError("'TOKEN' inválido")
         }
-        const filterPostById = await this.postsDatabase.getPostById(id_post)
-        if (!filterPostById) {
+        const postById = await this.postsDatabase.getPostById(id_post)
+        if (!postById) {
             throw new BadRequestError("'POST' não encontrado")
         }
+
+        const id = this.idGenerator.generate()
+        const content = ""
+        const likes = 0
+        const dislikes = 0
+        const created_at = new Date().toISOString()
+        const user_id = payload.id
+
+        const newComment = new Posts(
+            id,
+            content,
+            comment,
+            likes,
+            dislikes,
+            created_at,
+            {
+                id: user_id,
+                name: payload.apelido
+            },
+            {
+                id: "",
+                post_id: "",
+                comment: "",
+                likes: 0,
+                dislikes: 0,
+                created_at: "",
+                user: {
+                    user_id: "",
+                    name: "",
+                }
+            }
+
+        )
+        const updatePost = new Posts(
+            postById.id,
+            postById.content,
+            postById.comment,
+            postById.likes,
+            postById.dislikes,
+            postById.created_at,
+            {
+                id: user_id,
+                name: payload.apelido
+            },
+            {
+                id: '',
+                post_id: '',
+                comment: '',
+                likes: 0,
+                dislikes: 0,
+                created_at: '',
+                user: {
+                    user_id: '',
+                    name: ''
+                }
+            }
+        )
+        const newCommentDB = newComment.toModelsCommentDB()
+        await this.postsDatabase.createComment(newCommentDB)
+
+        const newUpDatePostDB = updatePost.toPostModelsDB()
+        await this.postsDatabase.updatePost(newUpDatePostDB, postById.id)
     }
 }

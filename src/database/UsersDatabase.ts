@@ -14,8 +14,5 @@ export class UsersDatabase extends BaseDatabase {
         
         return result[0]
     }
-    public getPostById = async (id: string): Promise<PostsDB | undefined> => {
-        const [result]: PostsDB[] | undefined = await BaseDatabase.connection(PostsDatabase.TABLE_POSTS).select().where({id: id})
-    return result
-    }
+   
 }
