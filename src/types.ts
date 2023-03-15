@@ -93,3 +93,8 @@ export interface CommentsCreatorDB {
         name: string
     }
 }
+export interface CommentsLikesDislikesDB {
+    user_id: string,
+    comment_id: string,
+    like: number
+}
