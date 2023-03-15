@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PostsBusiness } from "../business/PostsBusiness";
-import { createCommentInput, CreatePostInput, GetPostInput } from "../dtos/PostsDTO";
+import { createCommentInput, CreatePostInput, GetPostInput, LikeOrDislikeInput } from "../dtos/PostsDTO";
 import { BaseError } from "../errors/BaseError";
 
 export class PostsController {
@@ -35,7 +35,7 @@ export class PostsController {
                 content: req.body.content,
             }
             console.log("Input da Controller", input)
-             const output = await this.PostsBusiness.createPost(input) 
+            const output = await this.PostsBusiness.createPost(input)
             res.status(201).send("Post criado com sucesso")
 
         } catch (error) {
@@ -50,14 +50,33 @@ export class PostsController {
     }
     public createComment = async (req: Request, res: Response) => {
         try {
-            const input: createCommentInput ={
+            const input: createCommentInput = {
                 id_post: req.body.id_post,
-                comment:req.body.comment,
-                token:req.body.authorization as string,
+                comment: req.body.comment,
+                token: req.body.authorization as string,
             }
 
             const output = await this.PostsBusiness.createComment(input)
             res.status(201).send(output)
+        } catch (error) {
+            console.log(error)
+
+            if (error instanceof BaseError) {
+                res.status(error.statusCode).send(error.message)
+            } else {
+                res.status(500).send("Erro Inesperado")
+            }
+        }
+    }
+    public likeOrDislike = async (req: Request, res: Response) => {
+        try {
+            const input: LikeOrDislikeInput = {
+                idToLikeOrDislike: req.params.id,
+                token: req.headers.authorization,
+                like: req.body.like
+            }
+            await this.PostsBusiness.likeOrDislike(input)
+            res.status(200).end()
         } catch (error) {
             console.log(error)
 

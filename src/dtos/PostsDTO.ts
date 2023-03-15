@@ -13,7 +13,7 @@ export interface CreatePostInput {
 
 export interface LikeOrDislikeInput {
     idToLikeOrDislike: string,
-    token: string,
+    token: string | undefined,
     like: unknown
 }
 export interface createCommentInput{
